@@ -21,6 +21,8 @@ services:
     volumes:
       - db-data:/var/lib/mysql
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+      - ./init_order.sql:/docker-entrypoint-initdb.d/init_order.sql:ro
+      - ./z_dummy_products.sql:/docker-entrypoint-initdb.d/z_dummy_products.sql:ro
       
 volumes:
   db-data:

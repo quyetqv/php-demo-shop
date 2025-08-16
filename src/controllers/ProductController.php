@@ -9,8 +9,17 @@ class ProductController {
     }
 
     public function index() {
-        $stmt = $this->model->getAll();
+        $search = $_GET['search'] ?? '';
+        $page = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1;
+        $limit = 10;
+        $offset = ($page - 1) * $limit;
+        $total = 0;
+        $startQuery = microtime(true);
+        $stmt = $this->model->getAll($search, $limit, $offset, $total);
         $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $endQuery = microtime(true);
+        $queryTime = round(($endQuery - $startQuery) * 1000, 2); // ms
+        $totalPages = ceil($total / $limit);
         include __DIR__ . '/../../views/product_list.php';
     }
 

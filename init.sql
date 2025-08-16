@@ -11,7 +11,10 @@ CREATE TABLE IF NOT EXISTS products (
     price DECIMAL(10,2) NOT NULL,
     category_id INT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE SET NULL
+    FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE SET NULL,
+    INDEX idx_name (name),
+    INDEX idx_category_id (category_id),
+    INDEX idx_created_at (created_at)
 );
 
 -- Thêm dữ liệu mẫu cho categories
