@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  # Service cho ứng dụng PHP và Apache
+  app:
+    build: .
+    volumes:
+      - .:/var/www/html
+    ports:
+      - "8080:80"
+    depends_on:
+      - db
+    
+  # Service cho database (sử dụng MySQL 8)
+  db:
+    image: mysql:8.0
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: 12345678
+      MYSQL_DATABASE: ecommerce_db
+    volumes:
+      - db-data:/var/lib/mysql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+      
+volumes:
+  db-data:
