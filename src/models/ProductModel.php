@@ -5,9 +5,13 @@ class ProductModel {
     private $conn;
     private $table_name = "products";
 
-    public function __construct() {
-        $database = new Database();
-        $this->conn = $database->getConnection();
+    public function __construct($conn = null) {
+        if ($conn) {
+            $this->conn = $conn;
+        } else {
+            $database = new Database();
+            $this->conn = $database->getConnection();
+        }
     }
 
     public function getAll($search = '', $limit = 10, $offset = 0, &$total = 0) {

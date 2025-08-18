@@ -1,0 +1,17 @@
+{
+    "name": "simplest-code/php-interview",
+    "autoload": {
+        "psr-4": {
+            "SimplestCode\\PhpInterview\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "QUYETQV",
+            "email": "quyetqv@gmail.com"
+        }
+    ],
+    "require-dev": {
+        "phpunit/phpunit": "^9.6"
+    }
+}

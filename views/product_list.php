@@ -1,3 +1,6 @@
+<?php
+session_start();
+?>
 <?php include 'includes/header.php'; ?>
 <div class="container">
     <p style="color: #888; font-size: 13px;">Query time: <?php echo isset($queryTime) ? $queryTime . ' ms' : ''; ?></p>

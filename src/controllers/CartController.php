@@ -16,7 +16,7 @@ class CartController {
         $products = [];
         $total = 0;
         foreach ($cart as $productId => $qty) {
-            $stmt = $this->productModel->getAll('', 1, 0);
+            // $stmt = $this->productModel->getAll('', 1, 0);
             $product = $this->productModel->getById($productId);
             if ($product) {
                 $product['quantity'] = $qty;
@@ -25,6 +25,7 @@ class CartController {
                 $total += $product['subtotal'];
             }
         }
+
         include __DIR__ . '/../../views/cart.php';
     }
 
