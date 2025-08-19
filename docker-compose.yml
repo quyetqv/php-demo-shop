@@ -28,5 +28,10 @@ services:
     restart: always
     ports:
       - "6379:6379"
+  memcached:
+    image: memcached:1.6
+    restart: always
+    ports:
+      - "11211:11211"
 volumes:
   db-data:

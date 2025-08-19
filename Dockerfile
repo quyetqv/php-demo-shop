@@ -5,6 +5,8 @@ FROM php:8.2-apache
 # ext-install đã được thay thế bằng docker-php-ext-install
 RUN docker-php-ext-install pdo pdo_mysql
 RUN pecl install redis && docker-php-ext-enable redis
+RUN apt-get update && apt-get install -y libz-dev libmemcached-dev zlib1g-dev
+RUN pecl install memcached && docker-php-ext-enable memcached
 # Bật rewrite module của Apache
 RUN a2enmod rewrite
 
