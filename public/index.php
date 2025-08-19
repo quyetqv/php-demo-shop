@@ -1,4 +1,5 @@
 <?php
+session_start();
 require_once __DIR__ . '/../src/controllers/ProductController.php';
 require_once __DIR__ . '/../src/controllers/CartController.php';
 require_once __DIR__ . '/../src/controllers/OrderController.php';

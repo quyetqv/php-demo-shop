@@ -71,4 +71,12 @@ class ProductModel {
         $stmt->execute();
         return $stmt->fetch(\PDO::FETCH_ASSOC);
     }
+
+    public function getLatest10Products() {
+        $query = "SELECT p.*, c.name as category_name FROM " . $this->table_name . " p LEFT JOIN categories c ON p.category_id = c.id ORDER BY p.created_at DESC LIMIT 10";
+        $stmt = $this->conn->prepare($query);
+        // Binding all all value if we have any
+        $stmt->execute();
+        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+    }
 }

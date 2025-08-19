@@ -1,5 +1,7 @@
 <?php
 require_once __DIR__ . '/../models/ProductModel.php';
+require_once __DIR__ . '/../models/NhanVienFullTime.php';
+require_once __DIR__ . '/../models/NhanVienPartTime.php';
 
 class ProductController {
     private $model;
@@ -9,14 +11,41 @@ class ProductController {
     }
 
     public function index() {
+
+        // Sử dụng các lớp con
+        // $nhanVienFullTime = new NhanVienFullTime("Nguyễn Văn A", 10000000, 2000000);
+        // $nhanVienPartTime = new NhanVienPartTime("Trần Thị B", 50000, 100);
+
+        // echo "Lương của nhân viên full-time " . $nhanVienFullTime->getTen() . " là: " . number_format($nhanVienFullTime->tinhLuong()) . " VND\n";
+        // echo "Lương của nhân viên part-time " . $nhanVienPartTime->getTen() . " là: " . number_format($nhanVienPartTime->tinhLuong()) . " VND\n";
+
+        // Sẽ báo lỗi Fatal error: Cannot instantiate abstract class NhanVien
+        // $nhanVien = new NhanVien("Lê Văn C", 5000000); 
+
+        // $top10Products = $this->model->getLatest10Products();
+
+        $redis = new Redis();
+        $redis->connect('redis', 6379); // 'redis' là tên service trong docker-compose
+
         $search = $_GET['search'] ?? '';
         $page = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1;
         $limit = 10;
         $offset = ($page - 1) * $limit;
         $total = 0;
         $startQuery = microtime(true);
-        $stmt = $this->model->getAll($search, $limit, $offset, $total);
-        $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        $cacheKey = "products:{$search}:{$page}";
+        $totalKey = "total";
+        if ($redis->exists($cacheKey)) {
+            $products = json_decode($redis->get($cacheKey), true);
+            $total = $redis->get($totalKey);
+        } else {
+            $stmt = $this->model->getAll($search, $limit, $offset, $total);
+            $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $redis->set($cacheKey, json_encode($products), 60); // cache 60 giây
+            $redis->set($totalKey, $total, 60); // cache 60 giây
+        }
+
         $endQuery = microtime(true);
         $queryTime = round(($endQuery - $startQuery) * 1000, 2); // ms
         $totalPages = ceil($total / $limit);

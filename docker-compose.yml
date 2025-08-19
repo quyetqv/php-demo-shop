@@ -23,6 +23,10 @@ services:
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql:ro
       - ./init_order.sql:/docker-entrypoint-initdb.d/init_order.sql:ro
       - ./z_dummy_products.sql:/docker-entrypoint-initdb.d/z_dummy_products.sql:ro
-      
+  redis:
+    image: redis:7
+    restart: always
+    ports:
+      - "6379:6379"
 volumes:
   db-data:

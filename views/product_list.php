@@ -1,6 +1,3 @@
-<?php
-session_start();
-?>
 <?php include 'includes/header.php'; ?>
 <div class="container">
     <p style="color: #888; font-size: 13px;">Query time: <?php echo isset($queryTime) ? $queryTime . ' ms' : ''; ?></p>
@@ -28,6 +25,27 @@ session_start();
             ?>
         </span>)
     </a>
+
+    <div class="table-responsive">
+        <?php if (empty($products)): ?>
+            <p>No products found.</p>
+        <?php else: ?>
+
+        <?php
+            // Display top 10 latest products
+            if (!empty($top10Products)) {
+                echo '<h3>Latest Products</h3>';
+                echo '<ul>';
+                foreach ($top10Products as $product) {
+                    echo '<li>' . htmlspecialchars($product['name']) . ' - $' . htmlspecialchars($product['price']) . '</li>';
+                }
+                echo '</ul>';
+            }
+
+            endif;
+        ?>
+    </div>
+
     <table>
         <thead>
             <tr>
