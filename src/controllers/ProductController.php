@@ -24,11 +24,11 @@ class ProductController {
 
         // $top10Products = $this->model->getLatest10Products();
 
-        // $redis = new Redis();
-        // $redis->connect('redis', 6379); // 'redis' là tên service trong docker-compose
+        $redis = new Redis();
+        $redis->connect('redis', 6379); // 'redis' là tên service trong docker-compose
 
-        $memcached = new Memcached();
-        $memcached->addServer('memcached', 11211); // 'memcached' là tên service trong docker-compose
+        // $memcached = new Memcached();
+        // $memcached->addServer('memcached', 11211); // 'memcached' là tên service trong docker-compose
 
         $search = $_GET['search'] ?? '';
         $page = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1;
@@ -40,16 +40,16 @@ class ProductController {
         $cacheKey = "products:{$search}:{$page}";
         $totalKey = "total";
 
-        $data = $memcached->get($cacheKey);
+        $data = $redis->get($cacheKey);
 
         if ($data !== false) {
             $products = json_decode($data, true);
-            $total = $memcached->get($totalKey);
+            $total = $redis->get($totalKey);
         } else {
             $stmt = $this->model->getAll($search, $limit, $offset, $total);
             $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            $memcached->set($cacheKey, json_encode($products), 60); // cache 60 giây
-            $memcached->set($totalKey, $total, 60); // cache 60 giây
+            $redis->set($cacheKey, json_encode($products), 60); // cache 60 giây
+            $redis->set($totalKey, $total, 60); // cache 60 giây
         }
 
         $endQuery = microtime(true);
